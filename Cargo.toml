@@ -5,3 +5,4 @@ authors = ["Paweł Świątkowski"]
 
 [dependencies]
 openssl = "0.9.8"
+clap = "~2.19.0"
