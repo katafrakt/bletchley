@@ -6,3 +6,6 @@ authors = ["Paweł Świątkowski"]
 [dependencies]
 openssl = "0.9.8"
 clap = "~2.19.0"
+rand = "0.3.0"
+rust-crypto = "0.2.36"
+rustc-serialize = "0.3"

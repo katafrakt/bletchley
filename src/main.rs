@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate clap;
 mod crypto;
-use crypto::key_generator;
 
 fn main() {
     let matches = clap_app!(bletchley =>
@@ -9,18 +8,27 @@ fn main() {
         (author: "Paweł Świątkowski")
         (@subcommand gen =>
             (about: "Generates keys")
-            (@arg output: -o --output +takes_value "Base of the filenames of created keys (default: \"id\")")
+            (@arg name: -n --name +takes_value "Base of the filenames of created keys (default: \"id\")")
+        )
+        (@subcommand encrypt =>
+            (@arg key: -k --key +takes_value +required "key to encrypt with")
+            (@arg FILE: +required)
         )
     ).get_matches();
 
 
     if let Some(matches) = matches.subcommand_matches("gen") {
-        let name = matches.value_of("output").unwrap_or("id");
+        let name = matches.value_of("name").unwrap_or("id");
 
-        let pair = key_generator::generate_pair("rsa");
+        let pair = crypto::key_generator::generate_pair("rsa");
         match pair {
             Some(p) => p.write_keys(name),
             None => print!("Could not generate keys")
         }
+    } else if let Some(matches) = matches.subcommand_matches("encrypt") {
+        let key_file = matches.value_of("key").unwrap();
+        let input = matches.value_of("FILE").unwrap();
+
+        crypto::encryptor::with_file_key(key_file, input)
     }
 }
