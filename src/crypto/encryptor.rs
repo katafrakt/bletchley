@@ -4,6 +4,7 @@ extern crate rustc_serialize;
 extern crate openssl;
 
 use std::path::Path;
+use std::collections::HashMap;
 use std::process::exit;
 use std::fs::File;
 use std::io::{Read, Write};
@@ -14,7 +15,7 @@ use self::crypto::aes::{self, KeySize};
 use self::crypto::symmetriccipher::SynchronousStreamCipher;
 use self::openssl::rsa::{Rsa, PKCS1_PADDING};
 
-pub fn with_file_key(key: &str, input: &str) {
+pub fn with_file_key(key: &str, input: &str) -> HashMap<String,String> {
     let key_path = Path::new(key);
     if !key_path.exists() {
         fail("Key file does not exist.");
@@ -28,7 +29,7 @@ pub fn with_file_key(key: &str, input: &str) {
     let mut f = File::open(key).unwrap(); // TODO handle errors like insufficient permissions
     f.read_to_string(&mut key_contents).unwrap();
 
-    encrypt_file(key_contents, input);
+    return encrypt_file(key_contents, input);
 }
 
 fn fail(message: &str) {
@@ -36,7 +37,7 @@ fn fail(message: &str) {
     exit(1);
 }
 
-fn encrypt_file(rsa_key: String, input_path: &str) {
+fn encrypt_file(rsa_key: String, input_path: &str) -> HashMap<String,String> {
     // create random string which will serve as key to AES
     // source: http://zsiciarz.github.io/24daysofrust/book/vol1/day21.html
     let key_length = 80; // must fit into RSA encrypt max length of 117 (?) bytes
@@ -67,10 +68,10 @@ fn encrypt_file(rsa_key: String, input_path: &str) {
     // construct resulting string
     let encrypted_key_base64 = encrypted_key.to_base64(STANDARD);
     let encrypted_file_base64 = encrypted_file.to_base64(STANDARD);
-    let output = format!("{}|{}|{}|{}", encrypted_key_base64.len(), encrypted_key_base64,
-        encrypted_file_base64.len(), encrypted_file_base64);
 
-    // write results
-    let mut output_file = File::create("output.ble").expect("Cannot open output file for writing");
-    output_file.write_all(output.as_bytes()).unwrap();
+    // create hasmap with results
+    let mut result = HashMap::new();
+    result.insert("key".to_string(), encrypted_key_base64);
+    result.insert("content".to_string(), encrypted_file_base64);
+    return result;
 }

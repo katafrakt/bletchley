@@ -1,6 +1,8 @@
-#[macro_use]
-extern crate clap;
+#[macro_use] extern crate clap;
+#[macro_use] extern crate serde_json;
+
 mod crypto;
+mod ble;
 
 fn main() {
     let matches = clap_app!(bletchley =>
@@ -29,6 +31,7 @@ fn main() {
         let key_file = matches.value_of("key").unwrap();
         let input = matches.value_of("FILE").unwrap();
 
-        crypto::encryptor::with_file_key(key_file, input)
+        let crypt_result = crypto::encryptor::with_file_key(key_file, input);
+        ble::format::create_file(crypt_result, None);
     }
 }
