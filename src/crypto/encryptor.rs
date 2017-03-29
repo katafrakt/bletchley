@@ -15,7 +15,7 @@ use self::crypto::aes::{self, KeySize};
 use self::crypto::symmetriccipher::SynchronousStreamCipher;
 use self::openssl::rsa::{Rsa, PKCS1_PADDING};
 
-pub fn with_file_key(key: &str, input: &str) -> HashMap<String,String> {
+pub fn with_file_key(key: &str, input: &str) -> HashMap<String,Vec<u8>> {
     let key_path = Path::new(key);
     if !key_path.exists() {
         fail("Key file does not exist.");
@@ -37,7 +37,7 @@ fn fail(message: &str) {
     exit(1);
 }
 
-fn encrypt_file(rsa_key: String, input_path: &str) -> HashMap<String,String> {
+fn encrypt_file(rsa_key: String, input_path: &str) -> HashMap<String,Vec<u8>> {
     // create random string which will serve as key to AES
     // source: http://zsiciarz.github.io/24daysofrust/book/vol1/day21.html
     let key_length = 80; // must fit into RSA encrypt max length of 117 (?) bytes
@@ -67,11 +67,11 @@ fn encrypt_file(rsa_key: String, input_path: &str) -> HashMap<String,String> {
 
     // construct resulting string
     let encrypted_key_base64 = encrypted_key.to_base64(STANDARD);
-    let encrypted_file_base64 = encrypted_file.to_base64(STANDARD);
+    //let encrypted_file_base64 = encrypted_file.to_base64(STANDARD);
 
     // create hasmap with results
     let mut result = HashMap::new();
-    result.insert("key".to_string(), encrypted_key_base64);
-    result.insert("content".to_string(), encrypted_file_base64);
+    result.insert("key".to_string(), encrypted_key_base64.into_bytes());
+    result.insert("content".to_string(), encrypted_file);
     return result;
 }
