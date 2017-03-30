@@ -58,8 +58,7 @@ fn encrypt_file(rsa_key: String, input_path: &str) -> HashMap<String,Vec<u8>> {
     cipher.process(&input, &mut encrypted_file[..]);
 
     // encrypt key
-    let key_string = format!("{}|{}|{}|{}", key.len(),
-        key.to_base64(STANDARD), nonce.len(), nonce.to_base64(STANDARD));
+    let key_string = format!("{}|{}", key.to_base64(STANDARD), nonce.to_base64(STANDARD));
     let public_key = Rsa::public_key_from_pem(rsa_key.as_bytes()).unwrap(); // TODO don't assume it's public key
     let mut encrypted_key = vec![0; public_key.size()];
     let encrypted_bytes = public_key.public_encrypt(key_string.as_bytes(), &mut encrypted_key, PKCS1_PADDING).unwrap();
@@ -67,7 +66,6 @@ fn encrypt_file(rsa_key: String, input_path: &str) -> HashMap<String,Vec<u8>> {
 
     // construct resulting string
     let encrypted_key_base64 = encrypted_key.to_base64(STANDARD);
-    //let encrypted_file_base64 = encrypted_file.to_base64(STANDARD);
 
     // create hasmap with results
     let mut result = HashMap::new();

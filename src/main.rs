@@ -16,6 +16,10 @@ fn main() {
             (@arg key: -k --key +takes_value +required "key to encrypt with")
             (@arg FILE: +required)
         )
+        (@subcommand decrypt =>
+            (@arg key: -k --key +takes_value +required "key to decrypt with")
+            (@arg FILE: +required)
+        )
     ).get_matches();
 
 
@@ -33,5 +37,11 @@ fn main() {
 
         let crypt_result = crypto::encryptor::with_file_key(key_file, input);
         ble::format::create_file(crypt_result, None);
+    } else if let Some(matches) = matches.subcommand_matches("decrypt") {
+        let key_file = matches.value_of("key").unwrap();
+        let input = matches.value_of("FILE").unwrap();
+
+        let contents = ble::format::read_file(input);
+        crypto::decryptor::decrypt_from_file(contents, key_file);
     }
 }
