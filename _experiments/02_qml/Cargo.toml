@@ -1,0 +1,7 @@
+[package]
+name = "two_buttons"
+version = "0.1.0"
+authors = ["Paweł Świątkowski <inquebrantable@gmail.com>"]
+
+[dependencies]
+qml = "0.0.9"
