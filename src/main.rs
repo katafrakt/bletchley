@@ -1,5 +1,6 @@
 #[macro_use] extern crate clap;
 #[macro_use] extern crate serde_json;
+#[macro_use] extern crate qml;
 
 mod crypto;
 mod ble;
@@ -43,5 +44,10 @@ fn main() {
 
         let contents = ble::format::read_file(input);
         crypto::decryptor::decrypt_from_file(contents, key_file);
+    } else {
+        let mut engine = qml::QmlEngine::new();
+        engine.load_file("qml/main.qml");
+        engine.exec();
+        engine.quit();
     }
 }
