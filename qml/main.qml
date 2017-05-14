@@ -12,15 +12,12 @@ ApplicationWindow {
         id: swipeView
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
+        interactive: false
 
         CryptPage {
         }
 
-        Page {
-            Label {
-                text: qsTr("Second page")
-                anchors.centerIn: parent
-            }
+        ContactsPage {
         }
     }
 
@@ -31,7 +28,7 @@ ApplicationWindow {
             text: qsTr("Crypt")
         }
         TabButton {
-            text: qsTr("Second")
+            text: qsTr("Contacts")
         }
     }
 }
