@@ -2,12 +2,8 @@
 name = "bletchley"
 version = "0.1.0"
 authors = ["Paweł Świątkowski"]
+build = "build.rs"
 
 [dependencies]
-openssl = "0.9.11"
 clap = "~2.19.0"
-rand = "0.3.0"
-rust-crypto = "0.2.36"
-rustc-serialize = "0.3"
-serde_json = "0.9"
-qml = "0.0.9"
+bletchley_lib = { path = 'bletchley_lib' }
