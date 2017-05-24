@@ -1,0 +1,12 @@
+[package]
+name = "bletchley_ffi"
+version = "0.1.0"
+authors = ["Paweł Świątkowski <pawel.swiatkowski@boostcom.no>"]
+
+[lib]
+name = "bletchley_ffi"
+crate-type = ["cdylib"]
+
+[dependencies]
+bletchley_lib = { path = "../bletchley_lib"}
+libc = { version = "0.2", default-features = false }

@@ -1,9 +1,7 @@
 #[macro_use] extern crate clap;
-#[macro_use] extern crate serde_json;
+extern crate bletchley_lib;
 
-mod crypto;
-mod ble;
-mod app;
+use bletchley_lib::{crypto,ble};
 
 fn main() {
     let matches = clap_app!(bletchley =>
@@ -44,7 +42,5 @@ fn main() {
 
         let contents = ble::format::read_file(input);
         crypto::decryptor::decrypt_from_file(contents, key_file);
-    } else {
-        app::gui::start();
     }
 }
