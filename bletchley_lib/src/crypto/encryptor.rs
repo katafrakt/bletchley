@@ -26,8 +26,8 @@ pub fn with_file_key(key: &str, input: &str) -> HashMap<String,Vec<u8>> {
     }
 
     let mut key_contents = String::new();
-    let mut f = File::open(key).unwrap(); // TODO handle errors like insufficient permissions
-    f.read_to_string(&mut key_contents).unwrap();
+    let mut f = File::open(key).expect("Cannot open key file"); // TODO handle errors like insufficient permissions
+    f.read_to_string(&mut key_contents).expect("Cannot read key file");
 
     return encrypt_file(key_contents, input);
 }
